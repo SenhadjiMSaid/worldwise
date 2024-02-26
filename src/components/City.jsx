@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useParams } from "react-router-dom";
 import styles from "./City.module.css";
+import { useCities } from "../contexts/CitiesContext";
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -10,9 +11,11 @@ const formatDate = (date) =>
     weekday: "long",
   }).format(new Date(date));
 
-function City({ cities }) {
+function City() {
   const { id } = useParams();
   console.log(id);
+
+  const { cities } = useCities();
   // TEMP DATA
   const currentCity = cities[0];
   if (!currentCity) return <h3>Not found</h3>;
