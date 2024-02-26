@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./City.module.css";
 import { useCities } from "../contexts/CitiesContext";
+import { useEffect } from "react";
+import Button from "./Button.jsx";
+import Spinner from "./Spinner.jsx";
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
@@ -13,12 +16,21 @@ const formatDate = (date) =>
 
 function City() {
   const { id } = useParams();
+  const navigate = useNavigate();
   console.log(id);
 
-  const { cities } = useCities();
+  const { currentCity, getCity, isLoading } = useCities();
+
+  useEffect(
+    function () {
+      getCity(id);
+    },
+    [id]
+  );
   // TEMP DATA
-  const currentCity = cities[0];
   if (!currentCity) return <h3>Not found</h3>;
+
+  if (isLoading) return <Spinner />;
 
   const { cityName, countryCode, date, notes, country } = currentCity;
 
@@ -58,8 +70,18 @@ function City() {
           Check out {cityName} on Wikipedia &rarr;
         </a>
       </div>
-
-      <div>{/* <ButtonBack /> */}</div>
+      <div>
+        <Button
+          type="back"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(-1);
+          }}
+        >
+          {" "}
+          &larr; Back
+        </Button>
+      </div>
     </div>
   );
 }
