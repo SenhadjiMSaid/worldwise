@@ -1,31 +1,33 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { mapContainer } from "./Map.module.css";
+import { useSearchParams } from "react-router-dom";
+import styles from "./Map.module.css";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useState } from "react";
 
 function Map() {
-  const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
+  const [position] = useState([35.2096448, -0.6333114]);
 
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
+  // const lat = searchParams.get("lat");
+  // const lng = searchParams.get("lng");
   return (
-    <div
-      className={mapContainer}
-      onClick={() => {
-        navigate("form");
-      }}
-    >
-      <h1>
-        SAID SENHADJI {lat}, {lng}
-      </h1>
-
-      <button
-        onClick={() => {
-          setSearchParams({ lat: 23, lng: 50 });
-        }}
+    <div className={styles.mapContainer}>
+      <MapContainer
+        center={position}
+        zoom={13}
+        scrollWheelZoom={true}
+        className={styles.map}
       >
-        Change POS
-      </button>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+        />
+        <Marker position={position}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+      </MapContainer>
     </div>
   );
 }
