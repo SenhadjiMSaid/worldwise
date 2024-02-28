@@ -17,7 +17,6 @@ const formatDate = (date) =>
 function City() {
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log(id);
 
   const { currentCity, getCity, isLoading } = useCities();
 

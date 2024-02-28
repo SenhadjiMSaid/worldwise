@@ -13,19 +13,17 @@ import { useCities } from "../contexts/CitiesContext.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import Button from "./Button.jsx";
+import { useUrlPosition } from "../hooks/useUrlPosition.js";
 
 function Map() {
   const { cities } = useCities();
   const [position, setPosition] = useState([35, 0]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [lat, lng] = useUrlPosition();
   const {
     isLoading: isLoadingPosition,
     position: geolocationPosition,
     getPosition,
   } = useGeolocation();
-
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
 
   useEffect(
     function () {
@@ -86,7 +84,7 @@ function DetectClick() {
   const navigate = useNavigate();
   useMapEvent({
     click: (e) => {
-      navigate(`form?lat${e.latlng.lat}&lng${e.latlng.lng}`);
+      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`);
     },
   });
 }
