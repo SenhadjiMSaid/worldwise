@@ -6,7 +6,7 @@ import {
   useReducer,
   useState,
 } from "react";
-const URL = "http://localhost:8000";
+const URL_CITIES = "http://localhost:8000";
 
 const CitiesContext = createContext();
 
@@ -60,7 +60,7 @@ function CitiesProvider({ children }) {
     async function fetchCities() {
       try {
         dispatch({ type: "loading" });
-        const res = await fetch(`${URL}/cities`);
+        const res = await fetch(`${URL_CITIES}/cities`);
         const data = await res.json();
         dispatch({ type: "cities/loaded", payload: data });
       } catch (error) {
