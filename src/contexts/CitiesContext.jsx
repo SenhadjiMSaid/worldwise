@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useReducer,
-  useState,
 } from "react";
-const URL_CITIES = "http://localhost:8000";
+
+const BASE_URL = "http://localhost:8000";
 
 const CitiesContext = createContext();
 
@@ -60,7 +61,7 @@ function CitiesProvider({ children }) {
     async function fetchCities() {
       try {
         dispatch({ type: "loading" });
-        const res = await fetch(`${URL_CITIES}/cities`);
+        const res = await fetch(`${BASE_URL}/cities`);
         const data = await res.json();
         dispatch({ type: "cities/loaded", payload: data });
       } catch (error) {
@@ -73,26 +74,30 @@ function CitiesProvider({ children }) {
     fetchCities();
   }, []);
 
-  async function getCity(id) {
-    if (id == currentCity.id) return;
+  const getCity = useCallback(
+    async function getCity(id) {
+      if (id == currentCity.id) return;
 
-    try {
-      dispatch({ type: "loading" });
-      const res = await fetch(`${URL}/cities/${id}`);
-      const data = await res.json();
-      dispatch({ payload: data, type: "city/loaded" });
-    } catch {
-      dispatch({
-        type: "rejected",
-        payload: "There was an error in loading  the cities",
-      });
-    }
-  }
+      try {
+        dispatch({ type: "loading" });
+        const res = await fetch(`${BASE_URL}/cities/${id}`);
+        const data = await res.json();
+        dispatch({ payload: data, type: "city/loaded" });
+      } catch {
+        dispatch({
+          type: "rejected",
+          payload: "There was an error in loading  the cities",
+        });
+      }
+    },
+    [currentCity.id]
+  );
 
   async function createCity(newCity) {
+    dispatch({ type: "loading" });
+
     try {
-      dispatch({ type: "loading" });
-      const res = await fetch(`${URL}/cities`, {
+      const res = await fetch(`${BASE_URL}/cities`, {
         method: "POST",
         body: JSON.stringify(newCity),
         headers: {
@@ -100,11 +105,12 @@ function CitiesProvider({ children }) {
         },
       });
       const data = await res.json();
+
       dispatch({ type: "city/created", payload: data });
     } catch {
       dispatch({
         type: "rejected",
-        payload: "There was an error in creating the cities",
+        payload: "There was an error creating the city...",
       });
     }
   }
@@ -113,7 +119,7 @@ function CitiesProvider({ children }) {
     try {
       dispatch({ type: "loading" });
 
-      await fetch(`${URL}/cities/${id}`, {
+      await fetch(`${BASE_URL}/cities/${id}`, {
         method: "DELETE",
       });
       dispatch({ type: "city/deleted", payload: id });

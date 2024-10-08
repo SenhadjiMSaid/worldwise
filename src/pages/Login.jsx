@@ -23,8 +23,7 @@ export default function Login() {
     function () {
       if (isAuthenticated) navigate("/app", { replace: true });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isAuthenticated]
+    [isAuthenticated, navigate]
   );
 
   return (

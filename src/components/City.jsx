@@ -24,8 +24,7 @@ function City() {
     function () {
       getCity(id);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [id]
+    [id, getCity]
   );
   // TEMP DATA
   if (!currentCity) return <h3>Not found</h3>;
